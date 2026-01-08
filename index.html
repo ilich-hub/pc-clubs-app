@@ -151,8 +151,25 @@
         `;
 
         card.querySelector("button").onclick = () => {
-          tg.showAlert(`Бронирование клуба: ${club.name}`);
-        };
+  const data = {
+    type: "booking",
+    name: club.name,
+    address: club.address,
+    fps: club.fps,
+    gpu: club.gpu,
+    price: club.price,
+    user: tg.initDataUnsafe.user
+      ? {
+          id: tg.initDataUnsafe.user.id,
+          username: tg.initDataUnsafe.user.username,
+          first_name: tg.initDataUnsafe.user.first_name
+        }
+      : null
+  };
+
+  tg.sendData(JSON.stringify(data));
+  tg.close(); // закрывает Mini App (по желанию)
+};
 
         container.appendChild(card);
       });
