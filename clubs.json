@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Cyber Arena",
+    "address": "ул. Амира Темура, 15",
+    "fps": 240,
+    "gpu": "RTX 3070",
+    "price": "25 000 сум"
+  },
+  {
+    "name": "GameZone",
+    "address": "пр-т Навои, 102",
+    "fps": 144,
+    "gpu": "RTX 3060",
+    "price": "20 000 сум"
+  },
+  {
+    "name": "PlayHub",
+    "address": "ул. Мукими, 7",
+    "fps": 120,
+    "gpu": "GTX 1660 Super",
+    "price": "15 000 сум"
+  }
+]
