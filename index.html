@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Компьютерные клубы</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    :root {
+      --bg: #0e1621;
+      --card: #17212b;
+      --text: #ffffff;
+      --subtext: #8a9ba8;
+      --accent: #2ea6ff;
+      --button: #2ea6ff;
+      --button-text: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 16px;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      border-bottom: 1px solid #1f2a36;
+    }
+
+    .filter {
+      padding: 16px;
+    }
+
+    .filter select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--card);
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .clubs {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 4px 0;
+      color: var(--subtext);
+      font-size: 14px;
+    }
+
+    .card .price {
+      margin-top: 8px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--button);
+      color: var(--button-text);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .card button:active {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <header>🎮 Компьютерные клубы</header>
+
+  <div class="filter">
+    <select id="fpsFilter">
+      <option value="0">Все FPS</option>
+      <option value="60">От 60 FPS</option>
+      <option value="120">От 120 FPS</option>
+      <option value="144">От 144 FPS</option>
+      <option value="240">От 240 FPS</option>
+    </select>
+  </div>
+
+  <div class="clubs" id="clubs"></div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    let clubsData = [];
+
+    fetch("clubs.json")
+      .then(res => res.json())
+      .then(data => {
+        clubsData = data;
+        renderClubs(clubsData);
+      });
+
+    document.getElementById("fpsFilter").addEventListener("change", e => {
+      const minFps = Number(e.target.value);
+      const filtered = clubsData.filter(c => c.fps >= minFps);
+      renderClubs(filtered);
+    });
+
+    function renderClubs(list) {
+      const container = document.getElementById("clubs");
+      container.innerHTML = "";
+
+      list.forEach(club => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <h3>${club.name}</h3>
+          <p>📍 ${club.address}</p>
+          <p>🖥 Видеокарта: ${club.gpu}</p>
+          <p>⚡ FPS: ${club.fps}</p>
+          <p class="price">💰 ${club.price} / час</p>
+          <button>Забронировать</button>
+        `;
+
+        card.querySelector("button").onclick = () => {
+          tg.showAlert(`Бронирование клуба: ${club.name}`);
+        };
+
+        container.appendChild(card);
+      });
+    }
+  </script>
+
+</body>
+</html>
